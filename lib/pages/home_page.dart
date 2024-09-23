@@ -1,69 +1,175 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stars/models/genres_model.dart';
+import 'package:stars/models/now_playing_model.dart';
+import 'package:stars/providers/movies_provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  MoviesProvider moviesProvider = MoviesProvider();
+  PageController pageController = PageController();
+
+  @override
+  void initState() {
+    moviesProvider = context.read<MoviesProvider>();
+    _loadMovies();
+    super.initState();
+  }
+
+  void _loadMovies() async {
+    await moviesProvider.getTopRated();
+    await moviesProvider.getNowPlaying();
+    await moviesProvider.getPopularMovies();
+    await moviesProvider.getUpcoming();
+    await moviesProvider.getGenres();
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: 210,
-                width: double.infinity,
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10,
-                  itemBuilder: (context, index) => Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    // height: 200,
-                    width: 300,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-              ),
-              MovieList(),
-              MovieList(),
-            ],
+    List<Result> topRated = moviesProvider.topRated;
+    List<Result> nowPlaying = moviesProvider.nowPlaying;
+    List<Result> popularMovies = moviesProvider.popularMovies;
+    List<Result> upcomingMovies = moviesProvider.upcoming;
+    List<Genre> allGenres = moviesProvider.genres;
+
+    String getGenres(int index) {
+      String genres = '';
+      final genreIdsLength = topRated[index].genreIds?.length ?? 0;
+      for (var i = 0; i < genreIdsLength; i++) {
+        for (var element in allGenres) {
+          if (element.id == topRated[index].genreIds?[i]) {
+            genres += ' ${element.name!}';
+          }
+        }
+      }
+      return genres;
+    }
+
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 15),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Text(
+              'For you',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
           ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.black.withOpacity(0.5),
-          currentIndex: 2,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+          Container(
+            height: 210,
+            width: double.infinity,
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemCount: topRated.length,
+              itemBuilder: (context, index) => Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  width: 338,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.grey,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        FadeInImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(topRated[index].fullBackdropPath),
+                          placeholder: const AssetImage('assets/no-image.jpg'),
+                        ),
+                        Container(
+                          height: 50,
+                          width: double.infinity,
+                          color: Colors.black.withOpacity(0.4),
+                          child: Column(children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Text(
+                                '${topRated[index].title}',
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            ),
+                            Text(
+                              getGenres(index),
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8)),
+                            ),
+                          ]),
+                        ),
+                      ],
+                    ),
+                  )
+                  // Text(movies[index].title ?? ''),
+                  ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search_outlined),
-              label: 'Search',
+          ),
+          const SizedBox(height: 15),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Text(
+              'Now Playing',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              label: 'Favourites',
+          ),
+          MovieList(
+            movies: nowPlaying,
+          ),
+          const SizedBox(height: 15),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Text(
+              'Popular Movies',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
+          ),
+          MovieList(
+            movies: popularMovies,
+          ),
+          const SizedBox(height: 15),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Text(
+              'Upcoming Movies',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-          ],
-        ),
+          ),
+          MovieList(
+            movies: upcomingMovies,
+          ),
+        ],
       ),
     );
   }
 }
 
 class MovieList extends StatelessWidget {
+  final List<Result> movies;
   const MovieList({
     super.key,
+    required this.movies,
   });
 
   @override
@@ -74,27 +180,25 @@ class MovieList extends StatelessWidget {
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        itemCount: 10,
-        itemBuilder: (context, index) => const MovieCard(),
-      ),
-    );
-  }
-}
-
-class MovieCard extends StatelessWidget {
-  const MovieCard({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      // height: 200,
-      width: 150,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.grey,
+        itemCount: movies.length,
+        itemBuilder: (context, index) => Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            // height: 200,
+            width: 140,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.grey,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: FadeInImage(
+                fit: BoxFit.cover,
+                image: NetworkImage(movies[index].fullPosterImg),
+                placeholder: const AssetImage('assets/no-image.jpg'),
+              ),
+            )
+            // Text(movies[index].title ?? ''),
+            ),
       ),
     );
   }

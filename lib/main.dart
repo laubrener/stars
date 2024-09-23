@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stars/routes/routes.dart';
 
-void main() => runApp(const MyApp());
+import 'providers/movies_provider.dart';
+
+void main() => runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => MoviesProvider()),
+      ],
+      child: const MyApp(),
+    ));
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -12,7 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Material App',
       routes: appRoutes,
-      initialRoute: 'home',
+      initialRoute: 'main',
       theme: ThemeData.dark().copyWith(
           // primaryColor: Colors.purple,
           colorScheme: ColorScheme(
