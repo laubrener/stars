@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:stars/auth/secrets.dart';
+import 'package:stars/models/credits_model.dart';
 import 'package:stars/models/genres_model.dart';
 import 'package:stars/models/movie_detail_model.dart';
 import 'package:stars/models/now_playing_model.dart';
@@ -80,5 +81,17 @@ class MoviesService {
     MovieDetail result = MovieDetail.fromRawJson(utf8.decode(resp.bodyBytes));
 
     return result;
+  }
+
+  Future<List<Cast>> getCast(String id) async {
+    Uri url =
+        Uri.parse('$path/3/movie/$id/credits?api_key=$apiKey&language=$lang');
+    Response resp = await http
+        .get(url, headers: {'Content-Type': 'application/json;charset=UTF-8'});
+
+    Credits result = Credits.fromRawJson(utf8.decode(resp.bodyBytes));
+    List<Cast> cast = result.cast ?? [];
+
+    return cast;
   }
 }

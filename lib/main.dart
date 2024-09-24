@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Material App',
       routes: appRoutes,
-      initialRoute: 'details',
+      initialRoute: 'main',
       theme: themeData,
       // theme: ThemeData.dark().copyWith(
       //     // primaryColor: Colors.purple,

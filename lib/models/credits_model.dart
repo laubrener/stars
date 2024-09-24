@@ -69,6 +69,14 @@ class Cast {
     this.job,
   });
 
+  get fullProfilePath {
+    if (profilePath != null) {
+      return 'https://image.tmdb.org/t/p/w500$profilePath';
+    }
+
+    return 'https://i.stack.imgur.com/GNhxO.png';
+  }
+
   factory Cast.fromRawJson(String str) => Cast.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());

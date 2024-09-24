@@ -10,7 +10,9 @@ import 'package:stars/pages/search_page.dart';
 final Map<String, Widget Function(BuildContext)> appRoutes = {
   'loading': (_) => const LoadingPage(),
   'main': (_) => const MainPage(),
-  'details': (_) => const DetailsPage(),
+  'details': (_) => const DetailsPage(
+        movieId: '917496',
+      ),
 };
 
 List<Widget> pages = [

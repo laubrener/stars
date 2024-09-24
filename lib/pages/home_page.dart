@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stars/models/genres_model.dart';
 import 'package:stars/models/now_playing_model.dart';
+import 'package:stars/pages/movie_details_page.dart';
 import 'package:stars/providers/movies_provider.dart';
 
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -188,6 +189,11 @@ class MovieList extends StatelessWidget {
             child: Column(
               children: [
                 GestureDetector(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              DetailsPage(movieId: '${movies[index].id}'))),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: FadeInImage(
