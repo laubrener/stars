@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:stars/auth/secrets.dart';
 import 'package:stars/models/genres_model.dart';
+import 'package:stars/models/movie_detail_model.dart';
 import 'package:stars/models/now_playing_model.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -69,5 +70,15 @@ class MoviesService {
     List<Genre> genresList = result.genres ?? [];
 
     return genresList;
+  }
+
+  Future<MovieDetail> getDetails(String id) async {
+    Uri url = Uri.parse('$path/3/movie/$id?api_key=$apiKey&language=$lang');
+    Response resp = await http
+        .get(url, headers: {'Content-Type': 'application/json;charset=UTF-8'});
+
+    MovieDetail result = MovieDetail.fromRawJson(utf8.decode(resp.bodyBytes));
+
+    return result;
   }
 }

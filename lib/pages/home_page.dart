@@ -4,6 +4,8 @@ import 'package:stars/models/genres_model.dart';
 import 'package:stars/models/now_playing_model.dart';
 import 'package:stars/providers/movies_provider.dart';
 
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -13,7 +15,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   MoviesProvider moviesProvider = MoviesProvider();
-  PageController pageController = PageController();
 
   @override
   void initState() {
@@ -33,7 +34,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    pageController.dispose();
     super.dispose();
   }
 
@@ -101,29 +101,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           height: 50,
                           width: double.infinity,
                           color: Colors.black.withOpacity(0.4),
-                          child: Column(children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Text(
-                                '${topRated[index].title}',
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                            ),
-                            Text(
-                              getGenres(index),
-                              style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8)),
-                            ),
-                          ]),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${topRated[index].title}',
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.start,
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
+                                  Text(
+                                    getGenres(index),
+                                    style: TextStyle(
+                                        color: Colors.white.withOpacity(0.8)),
+                                  ),
+                                ]),
+                          ),
                         ),
                       ],
                     ),
-                  )
-                  // Text(movies[index].title ?? ''),
-                  ),
+                  )),
             ),
           ),
           const SizedBox(height: 15),
@@ -175,7 +174,8 @@ class MovieList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 210,
+      height: 240,
+      // color: Colors.grey,
       width: double.infinity,
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
@@ -183,22 +183,38 @@ class MovieList extends StatelessWidget {
         itemCount: movies.length,
         itemBuilder: (context, index) => Container(
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            // height: 200,
-            width: 140,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.grey,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: FadeInImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(movies[index].fullPosterImg),
-                placeholder: const AssetImage('assets/no-image.jpg'),
-              ),
-            )
-            // Text(movies[index].title ?? ''),
-            ),
+            width: 130,
+            height: 190,
+            child: Column(
+              children: [
+                GestureDetector(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: FadeInImage(
+                      height: 175,
+                      width: 130,
+                      fit: BoxFit.cover,
+                      image: NetworkImage(movies[index].fullPosterImg),
+                      placeholder: const AssetImage('assets/no-image.jpg'),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  movies[index].title ?? '',
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 5),
+                RatingBar.builder(
+                  itemBuilder: (context, index) => const Icon(Icons.star),
+                  onRatingUpdate: (value) => false,
+                  allowHalfRating: true,
+                  initialRating: (movies[index].voteAverage ?? 0) / 2,
+                  itemSize: 14,
+                )
+              ],
+            )),
       ),
     );
   }

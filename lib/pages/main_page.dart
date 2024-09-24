@@ -17,15 +17,16 @@ class _MainPageState extends State<MainPage> {
       child: Scaffold(
         body: pages[currentPage],
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.black.withOpacity(0.5),
           currentIndex: currentPage,
           onTap: (value) {
             setState(() {
               currentPage = value;
             });
           },
-          items: const [
+          items: [
             BottomNavigationBarItem(
+              backgroundColor:
+                  ThemeData.dark().scaffoldBackgroundColor.withOpacity(0.2),
               icon: Icon(Icons.home),
               label: 'Home',
             ),

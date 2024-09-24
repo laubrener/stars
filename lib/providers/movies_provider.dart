@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stars/models/genres_model.dart';
+import 'package:stars/models/movie_detail_model.dart';
 import 'package:stars/models/now_playing_model.dart';
 import 'package:stars/services/movies_service.dart';
 
@@ -9,6 +10,7 @@ class MoviesProvider extends ChangeNotifier {
   List<Result> topRated = [];
   List<Result> upcoming = [];
   List<Genre> genres = [];
+  MovieDetail details = MovieDetail();
 
   MoviesService service = MoviesService();
   bool _isLoading = true;
@@ -52,5 +54,12 @@ class MoviesProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
     return genres;
+  }
+
+  Future<MovieDetail> getDetails(String id) async {
+    details = await service.getDetails(id);
+    _isLoading = false;
+    notifyListeners();
+    return details;
   }
 }
