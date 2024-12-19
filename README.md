@@ -1,16 +1,28 @@
-# stars
+# Stars app
 
-A new Flutter project.
+An informative movie app designed to offer a seamless and visually appealing experience.
 
-## Getting Started
+## What does this app do?
 
-This project is a starting point for a Flutter application.
+- Explore popular movies and more:
+Access lists such as Now Playing, Top Rated, Popular Movies and Upcoming Movies, directly from the MoviesDB API.
 
-A few resources to get you started if this is your first Flutter project:
+- Full details:
+When you select a movie, you can view detailed information, including:
+  - Main cast.
+  - Rating.
+  - Poster photo.
+  - Release date.
+  - Overview.
+  - Genres.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Technologies behind the app
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Flutter, with an optimized design for a fluid and visually appealing navigation.
+- State: Provider driven to ensure a consistent and efficient experience.
+- Direct API connection: Connects to [TMDB](https://www.themoviedb.org/) without the need for a backend, making it lightweight and fast.
+
+
+## Impact
+
+Stars App is ideal for movie lovers looking to discover and explore movies from the convenience of their mobile device, with up-to-date information accessible at any time.
