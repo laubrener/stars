@@ -9,9 +9,23 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 
 class MoviesService {
-  Future<List<Result>> getListNowPlaying() async {
+  Future<List<Result>> getListNowPlaying(int page) async {
     Uri url = Uri.parse(
-        '$path/3/movie/now_playing?api_key=$apiKey&language=$lang&page=1');
+        '$path/3/movie/now_playing?api_key=$apiKey&language=$lang&page=$page');
+    Response resp = await http
+        .get(url, headers: {'Content-Type': 'application/json;charset=UTF-8'});
+
+    ListNowPlaying nowPlaying =
+        ListNowPlaying.fromRawJson(utf8.decode(resp.bodyBytes));
+
+    List<Result> moviesList = nowPlaying.results ?? [];
+
+    return moviesList;
+  }
+
+  Future<List<Result>> getPopularMovies(int page) async {
+    Uri url = Uri.parse(
+        '$path/3/movie/popular?api_key=$apiKey&language=$lang&page=$page');
     Response resp = await http
         .get(url, headers: {'Content-Type': 'application/json;charset=UTF-8'});
 
@@ -22,9 +36,9 @@ class MoviesService {
     return moviesList;
   }
 
-  Future<List<Result>> getPopularMovies() async {
+  Future<List<Result>> getTopRated(int page) async {
     Uri url = Uri.parse(
-        '$path/3/movie/popular?api_key=$apiKey&language=$lang&page=1');
+        '$path/3/movie/top_rated?api_key=$apiKey&language=$lang&page=$page');
     Response resp = await http
         .get(url, headers: {'Content-Type': 'application/json;charset=UTF-8'});
 
@@ -35,22 +49,9 @@ class MoviesService {
     return moviesList;
   }
 
-  Future<List<Result>> getTopRated() async {
+  Future<List<Result>> getUpcoming(int page) async {
     Uri url = Uri.parse(
-        '$path/3/movie/top_rated?api_key=$apiKey&language=$lang&page=1');
-    Response resp = await http
-        .get(url, headers: {'Content-Type': 'application/json;charset=UTF-8'});
-
-    ListNowPlaying nowPlaying =
-        ListNowPlaying.fromRawJson(utf8.decode(resp.bodyBytes));
-    List<Result> moviesList = nowPlaying.results ?? [];
-
-    return moviesList;
-  }
-
-  Future<List<Result>> getUpcoming() async {
-    Uri url = Uri.parse(
-        '$path/3/movie/upcoming?api_key=$apiKey&language=$lang&page=1');
+        '$path/3/movie/upcoming?api_key=$apiKey&language=$lang&page=$page');
     Response resp = await http
         .get(url, headers: {'Content-Type': 'application/json;charset=UTF-8'});
 

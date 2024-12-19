@@ -16,6 +16,7 @@ class MoviesProvider extends ChangeNotifier {
 
   MoviesService service = MoviesService();
   bool _isLoading = true;
+  int _page = 0;
 
   bool get isLoading => _isLoading;
   set isLoading(bool value) {
@@ -23,32 +24,36 @@ class MoviesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Result>> getNowPlaying() async {
-    nowPlaying = await service.getListNowPlaying();
+  getNowPlaying() async {
+    _page++;
+    List<Result> result = await service.getListNowPlaying(_page);
+    nowPlaying = [...nowPlaying, ...result];
     _isLoading = false;
     notifyListeners();
-    return nowPlaying;
   }
 
-  Future<List<Result>> getPopularMovies() async {
-    popularMovies = await service.getPopularMovies();
+  getPopularMovies() async {
+    _page++;
+    List<Result> result = await service.getPopularMovies(_page);
+    popularMovies = [...popularMovies, ...result];
     _isLoading = false;
     notifyListeners();
-    return popularMovies;
   }
 
-  Future<List<Result>> getTopRated() async {
-    topRated = await service.getTopRated();
+  getTopRated() async {
+    _page++;
+    List<Result> result = await service.getTopRated(_page);
+    topRated = [...topRated, ...result];
     _isLoading = false;
     notifyListeners();
-    return topRated;
   }
 
-  Future<List<Result>> getUpcoming() async {
-    upcoming = await service.getUpcoming();
+  getUpcoming() async {
+    _page++;
+    List<Result> result = await service.getUpcoming(_page);
+    upcoming = [...upcoming, ...result];
     _isLoading = false;
     notifyListeners();
-    return upcoming;
   }
 
   Future<List<Genre>> getGenres() async {

@@ -19,8 +19,8 @@ class MyApp extends StatelessWidget {
     ThemeData themeData = ThemeData.dark().copyWith(
         indicatorColor: const Color(0xff576ca8),
         primaryColorLight: Colors.white,
-        primaryColor: Color(int.parse('0xff2A0B51')),
-        scaffoldBackgroundColor: Color(int.parse('0xff2A0B51')),
+        primaryColor: const Color(0xff2A0B51),
+        scaffoldBackgroundColor: const Color(0xff2A0B51),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: Colors.transparent,
           showSelectedLabels: false,

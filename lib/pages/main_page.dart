@@ -27,18 +27,18 @@ class _MainPageState extends State<MainPage> {
             BottomNavigationBarItem(
               backgroundColor:
                   ThemeData.dark().scaffoldBackgroundColor.withOpacity(0.2),
-              icon: Icon(Icons.home),
+              icon: const Icon(Icons.home),
               label: 'Home',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.search_outlined),
               label: 'Search',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
               label: 'Favourites',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Profile',
             ),
